@@ -40,14 +40,10 @@ class Quiz(models.Model):
 class Question(models.Model):
     content = models.CharField(max_length=255)
     image = models.ImageField(blank=True, upload_to='images/%Y/%m/%d')
-    quizzes = models.ManyToManyField(Quiz, related_name="questions")
-    order = models.PositiveIntegerField(blank=True)
+    quizzes = models.ManyToManyField(Quiz, related_name="questions", through="QuestionOrder")
 
     def __str__(self):
         return self.content
-
-    class Meta:
-        ordering = ['order']
 
 
 class Answer(models.Model):
@@ -81,3 +77,12 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ['-created', ]
+
+
+class QuestionOrder(models.Model):
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    order = models.PositiveIntegerField(blank=True)
+
+    class Meta:
+        ordering = ['quiz', 'order', ]
