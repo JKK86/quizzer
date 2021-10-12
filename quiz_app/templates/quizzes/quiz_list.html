@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}
+    Lista quizów
+{% endblock %}
+{% block content %}
+    <div id="sidebar">
+        <h2>Kategorie</h2>
+        <ul>
+            <li><a href="{% url 'quiz_list' %}">Wszystkie</a></li>
+            {% for category in categories %}
+                <li><a href="{{ category.get_absolute_url }}">{{ category }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div id="quiz-list">
+        {% if category %}
+            <h1>{{ category }}</h1>
+        {% else %}
+            <h1>Quizy</h1>
+        {% endif %}
+        {% for quiz in quizzes %}
+            <div class="quiz-card">
+                <p>{{ quiz.title }}</p>
+                <p>{{ quiz.description | truncatewords:30 }}</p>
+                <p><a href="" class="button">Start</a></p>
+            </div>
+        {% endfor %}
+         {% include 'pagination.html' with page=quizzes %}
+    </div>
+
+{% endblock %}

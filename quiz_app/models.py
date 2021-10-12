@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 from quizzer import settings
 
@@ -13,6 +14,9 @@ class Category(models.Model):
     class Meta:
         verbose_name_plural = "Categories"
         ordering = ['name', ]
+
+    def get_absolute_url(self):
+        return reverse('quiz_list_by_category', args={self.slug})
 
 
 class Quiz(models.Model):
