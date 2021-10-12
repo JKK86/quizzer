@@ -14,7 +14,7 @@ def create_test_user():
 
 
 @pytest.fixture
-def set_up():
+def set_up(create_test_user):
     quizzes = []
     categories = []
 
