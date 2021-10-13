@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
 
+from .fields import OrderField
 from quizzer import settings
 
 
@@ -93,7 +94,10 @@ class Comment(models.Model):
 class QuestionOrder(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    order = models.PositiveIntegerField(blank=True)
+    order = OrderField(blank=True, for_fields=['quiz'])
 
     class Meta:
         ordering = ['quiz', 'order', ]
+
+    def __str__(self):
+        return f"{self.order}.{self.question}"
