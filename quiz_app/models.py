@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.utils.text import slugify
 
 from quizzer import settings
 
@@ -22,6 +23,7 @@ class Category(models.Model):
 class Quiz(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='quizzes')
     title = models.CharField(max_length=128)
+    slug = models.SlugField(max_length=128, blank=True)
     description = models.TextField()
     number_of_questions = models.SmallIntegerField(default=1)
     time = models.SmallIntegerField(default=100, help_text="Duration of the quiz [s]")
@@ -36,8 +38,17 @@ class Quiz(models.Model):
         verbose_name_plural = "Quizzes"
         ordering = ['-created', ]
 
+    def get_absolute_url(self):
+        return reverse('quiz_detail', args={self.id, self.slug})
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+            super().save(*args, **kwargs)
+
 
 class Question(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="questions", blank=True)
     content = models.CharField(max_length=255)
     image = models.ImageField(blank=True, upload_to='images/%Y/%m/%d')
     quizzes = models.ManyToManyField(Quiz, related_name="questions", through="QuestionOrder")

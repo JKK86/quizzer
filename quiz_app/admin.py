@@ -18,6 +18,7 @@ class QuestionOrderAdminInline(admin.TabularInline):
 class QuizAdmin(admin.ModelAdmin):
     list_display = ['title', 'category', 'time', 'author', 'created', 'updated']
     exclude = ['created', 'updated', ]
+    prepopulated_fields = {'slug': ('title', )}
     inlines = [QuestionOrderAdminInline, ]
     list_filter = ['category', 'author']
     search_fields = ['title', 'description', ]
@@ -31,7 +32,8 @@ class AnswerInline(admin.TabularInline):
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ['content', ]
-    fields = ['content', 'image', ]
+    list_display = ['content', 'category' ]
+    fields = ['content', 'image', 'category', ]
     inlines = [AnswerInline, ]
     search_fields = ['content', ]
+    list_filter = ['category', ]
