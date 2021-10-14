@@ -28,6 +28,7 @@ class QuizAdmin(admin.ModelAdmin):
 
 class AnswerInline(admin.TabularInline):
     model = Answer
+    extra = 4
 
 
 @admin.register(Question)

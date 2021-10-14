@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.utils.text import slugify
 
 from .fields import OrderField
+
 from quizzer import settings
 
 
@@ -28,7 +29,10 @@ class Quiz(models.Model):
     description = models.TextField()
     number_of_questions = models.SmallIntegerField(default=1)
     time = models.SmallIntegerField(default=100, help_text="Duration of the quiz [s]")
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="quizzes_created")
+    author = models.ForeignKey(settings.AUTH_USER_MODEL,
+                               on_delete=models.SET_NULL,
+                               null=True,
+                               related_name="quizzes_created")
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
