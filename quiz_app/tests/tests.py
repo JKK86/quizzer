@@ -15,3 +15,11 @@ def test_list_quizzes_by_category(client, set_up):
     response = client.get(f'/{category.slug}/')
     assert response.status_code == 200
     assert category.quizzes.count() == len(response.context['quizzes'])
+
+
+@pytest.mark.django_db
+def test_detail_quiz(client, set_up):
+    quiz = set_up[1][0]
+    response = client.get(f'/{quiz.id}/{quiz.slug}/')
+    assert response.status_code == 200
+    assert response.context['quiz'] == quiz
