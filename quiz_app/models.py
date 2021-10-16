@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 from django.urls import reverse
 from django.utils.text import slugify
 
@@ -27,8 +29,7 @@ class Quiz(models.Model):
     title = models.CharField(max_length=128)
     slug = models.SlugField(max_length=128, blank=True)
     description = models.TextField()
-    number_of_questions = models.SmallIntegerField(default=1)
-    time = models.SmallIntegerField(default=100, help_text="Duration of the quiz [s]")
+    time = models.SmallIntegerField(default=0, help_text="Duration of the quiz [s]")
     author = models.ForeignKey(settings.AUTH_USER_MODEL,
                                on_delete=models.SET_NULL,
                                null=True,
@@ -46,14 +47,24 @@ class Quiz(models.Model):
     def get_absolute_url(self):
         return reverse('quiz_detail', args={self.id, self.slug})
 
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.title)
-            super().save(*args, **kwargs)
+    @property
+    def number_of_questions(self):
+        return self.questions.count()
+
+    # def save(self, *args, **kwargs):
+    #     if not self.slug:
+    #         self.slug = slugify(self.title)
+    #         super().save(*args, **kwargs)
+
+
+@receiver(pre_save, sender=Quiz)
+def create_slug(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        instance.slug = slugify(instance.title)
 
 
 class Question(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="questions", blank=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="questions", blank=True, null=True)
     content = models.CharField(max_length=255)
     image = models.ImageField(blank=True, upload_to='images/%Y/%m/%d')
     quizzes = models.ManyToManyField(Quiz, related_name="questions", through="QuestionOrder")

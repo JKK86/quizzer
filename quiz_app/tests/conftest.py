@@ -29,8 +29,7 @@ def set_up(create_test_user):
             category=random.choice(categories),
             title=f"Quiz testowy {1}",
             description=f"Opis quizu testowego {1}",
-            number_of_questions=random.randint(1, 10),
-            time=random.randint(60, 120),
+            time=random.randint(0, 120),
             author=create_test_user,
         ))
 

@@ -11,7 +11,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 class QuestionOrderAdminInline(admin.TabularInline):
     model = QuestionOrder
-    extra = 2
+    extra = 4
 
 
 @admin.register(Quiz)

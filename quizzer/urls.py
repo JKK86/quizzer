@@ -21,5 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('', quiz_views.QuizListView.as_view(), name="quiz_list"),
-    path('<slug:category_slug>/', quiz_views.QuizListView.as_view(), name="quiz_list_by_category")
+    path('<slug:category_slug>/', quiz_views.QuizListView.as_view(), name="quiz_list_by_category"),
+    path('<int:quiz_id>/<slug:quiz_slug>/', quiz_views.QuizDetailView.as_view(), name="quiz_detail"),
+    path('<int:quiz_id>/<slug:quiz_slug>/data', quiz_views.QuizData.as_view(), name="quiz_data"),
 ]

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}
+    Quiz - {{ quiz }}
+{% endblock %}
+{% block content %}
+    <div class="quiz-detail">
+        <h1>{{ quiz }}</h1>
+        {% if quiz.author %}
+            <p>Utworzony przez {{ quiz.author }}</p>
+        {% endif %}
+        <p>{{ quiz.description }}</p>
+        <p>Liczba pytań: {{ quiz.number_of_questions }}</p>
+        {% if quiz.time %}
+            <p>Czas na rozwiązanie quizu: {{ quiz.time }}s</p>
+        {% endif %}
+        <button id="start-quiz">Start</button>
+    </div>
+    <div >
+        <form id="quiz-form" action="" method="post">
+            {% csrf_token %}
+            <div id="quiz-content">
+                
+            </div>
+            <input id="button-submit1" type="submit" value="Sprawdź wyniki" style="display: none">
+        </form>
+    </div>
+{% endblock %}

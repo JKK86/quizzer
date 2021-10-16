@@ -14,18 +14,18 @@
     </div>
     <div id="quiz-list">
         {% if category %}
-            <h1>{{ category }}</h1>
+            <h2>{{ category }}</h2>
         {% else %}
-            <h1>Quizy</h1>
+            <h2>Quizy</h2>
         {% endif %}
         {% for quiz in quizzes %}
             <div class="quiz-card">
-                <p>{{ quiz.title }}</p>
+                <h3>{{ quiz.title }}</h3>
                 <p>{{ quiz.description | truncatewords:30 }}</p>
-                <p><a href="" class="button">Start</a></p>
+                <p><a href="{{ quiz.get_absolute_url }}" class="button">Przystąp do quizu</a></p>
             </div>
         {% endfor %}
-         {% include 'pagination.html' with page=quizzes %}
+        {% include 'pagination.html' with page=quizzes %}
     </div>
 
 {% endblock %}
