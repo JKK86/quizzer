@@ -15,13 +15,16 @@
         {% endif %}
         <button id="start-quiz">Start</button>
     </div>
+    {% if quiz.time %}
+    <div class="quiz-time" style="display: none">Pozostało: <span id="quiz-time-left" >{{ quiz.time }}</span>s</div>
+    {% endif %}
     <div >
         <form id="quiz-form" action="" method="post">
             {% csrf_token %}
             <div id="quiz-content">
                 
             </div>
-            <input id="button-submit1" type="submit" value="Sprawdź wyniki" style="display: none">
+            <input id="button-submit" type="submit" value="Sprawdź wyniki" style="display: none">
         </form>
     </div>
 {% endblock %}
