@@ -26,5 +26,8 @@
             </div>
             <input id="button-submit" type="submit" value="Sprawdź wyniki" style="display: none">
         </form>
+    <div id="quiz-results">
+        <p style="display: none">Twój wynik to: <span id="total-score"></span> / {{ quiz.number_of_questions }}</p>
+    </div>
     </div>
 {% endblock %}

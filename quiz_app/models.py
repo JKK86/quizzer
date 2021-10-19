@@ -45,7 +45,7 @@ class Quiz(models.Model):
         ordering = ['-created', ]
 
     def get_absolute_url(self):
-        return reverse('quiz_detail', args={self.id, self.slug})
+        return reverse('quiz_detail', args=[self.id, self.slug])
 
     @property
     def number_of_questions(self):

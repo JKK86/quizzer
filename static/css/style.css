@@ -1,0 +1,11 @@
+.success {
+    background-color: lawngreen;
+}
+
+.mistake {
+    background-color: red;
+}
+
+.info {
+    background-color: deepskyblue;
+}
