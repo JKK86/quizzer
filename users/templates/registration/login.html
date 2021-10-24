@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}
+    Logowanie
+{% endblock %}
+{% block content %}
+    <h1>Logowanie</h1>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% if form.errors %}
+        <p>Nazwa użytkownika lub hasło są nieprawidłowe.
+            Spróbuj ponownie.</p>
+    {% else %}
+        <p>Wpisz dane logowania. Jeśli nie masz jeszcze konta, możesz się zarejestrować
+            <a href="{% url 'registration' %}">tutaj</a>.</p>
+    {% endif %}
+    <p><a href="{% url 'password_reset' %}">Zapomniałeś hasła?</a></p>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="hidden" name="next" value="{{ next }}">
+        <p><input type="submit" value="Zaloguj"></p>
+    </form>
+{% endblock %}
