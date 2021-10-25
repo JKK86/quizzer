@@ -85,10 +85,17 @@ class Answer(models.Model):
 class Result(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='results')
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='results')
-    score = models.FloatField()
+    score = models.DecimalField(max_digits=3, decimal_places=2)
+    date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Wynik użytownika {self.user.username} w quizie {self.quiz}: {self.score}"
+
+    def get_score_percentage(self):
+        return f'{self.score:.0%}'
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=['user', 'quiz'], name='unique_result')]
 
 
 class Comment(models.Model):

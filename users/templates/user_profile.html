@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}
+    Panel użytkownika
+{% endblock %}
+{% block content %}
+    <h1>Panel użytkownika</h1>
+    <hr/>
+    <h3>Ustawienia konta</h3>
+    <p>Imię i nazwisko: {{ user.first_name }} {{ user.last_name }}</p>
+    <p>Adres e-mail: {{ user.email }}</p>
+    <p><a href="">Edycja profilu</a></p>
+    <p><a href="{% url 'password_change' %}">Zmiana hasła</a></p>
+    <hr/>
+    <h3>Wyniki quizów:</h3>
+    {% if not results %}
+        Brak historii rozwiązanych quizzów
+    {% else %}
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <table>
+            <thead>
+            <tr>
+                <th>Quiz</th>
+                <th>Wynik</th>
+                <th>Data</th>
+                <th>Popraw</th>
+            </tr>
+            </thead>
+        <tbody>
+            {% for r in results %}
+                <tr>
+                <td>{{ r.quiz }}</td>
+                <td>{{ r.get_score_percentage }}</td>
+                <td>{{ r.date | date:"d-m-Y"  }}</td>
+                <td><a href="{% url 'quiz_detail' r.quiz.id r.quiz.slug %}" class="button">Popraw wynik</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

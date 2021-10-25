@@ -19,3 +19,9 @@ class RegistrationForm(forms.ModelForm):
         password_repeat = cleaned_data['password_repeat']
         if password and password_repeat and password != password_repeat:
             raise forms.ValidationError('Hasła nie są takie same')
+
+
+class EditProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']

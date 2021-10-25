@@ -76,5 +76,5 @@ class QuizDataSaveView(View):
                             results.append({str(q): {
                                 'correct_answer': correct_answer,
                                 'selected_answer': 'Brak odpowiedzi'}})
-            Result.objects.create(quiz=quiz, user=user, score=(score / quiz.number_of_questions))
+            Result.objects.update_or_create(quiz=quiz, user=user, defaults={'score': (score / quiz.number_of_questions)})
             return JsonResponse({'results': results, 'score': score})

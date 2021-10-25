@@ -1,10 +1,12 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import FormView
 
-from users.forms import RegistrationForm
+from quiz_app.models import Result
+from users.forms import RegistrationForm, EditProfileForm
 
 User = get_user_model()
 
@@ -24,3 +26,22 @@ class RegistrationView(FormView):
         )
         messages.success(self.request, "Użytkownik został pomyślnie zarejestrowany")
         return super().form_valid(form)
+
+
+class UserProfileView(View):
+    def get(self, request):
+        user = request.user
+        results = Result.objects.filter(user=user)
+        return render(request, 'user_profile.html', {'results': results})
+
+
+class EditProfileView(View):
+    def get(self, request):
+        form = EditProfileForm(instance=request.user)
+        return render(request, 'registration/edit_profile.html', {'form': form})
+
+    def post(self, request):
+        form = EditProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+        return redirect('user_profile')
