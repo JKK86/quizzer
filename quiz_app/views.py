@@ -1,6 +1,7 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
+from django.utils import timezone
 from django.views import View
 
 from quiz_app.models import Quiz, Category, Result
@@ -60,7 +61,7 @@ class QuizDataSaveView(View):
             score = 0
 
             for q in quiz.questions.all():
-                answer_selected = data.get(q.content)
+                answer_selected = data.get(q.content.replace('"', ''))
                 q_answers = q.answers.all()
                 for answer in q_answers:
                     if answer.is_correct:
@@ -76,5 +77,8 @@ class QuizDataSaveView(View):
                             results.append({str(q): {
                                 'correct_answer': correct_answer,
                                 'selected_answer': 'Brak odpowiedzi'}})
-            Result.objects.update_or_create(quiz=quiz, user=user, defaults={'score': (score / quiz.number_of_questions)})
+            Result.objects.update_or_create(quiz=quiz, user=user,
+                                            defaults={
+                                                'score': (score / quiz.number_of_questions),
+                                                'date': timezone.now()})
             return JsonResponse({'results': results, 'score': score})

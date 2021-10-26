@@ -14,6 +14,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 .replace(/[^\w-]+/g, '');
         }
 
+        function removeDoubleQuotes(string) {
+            return string.replace(/(")/g, '');
+        }
+
 
         function showQuestions(data) {
             const questions = data.questions;
@@ -30,9 +34,9 @@ document.addEventListener("DOMContentLoaded", function () {
                                 <div>
                                 <input type="radio" 
                                 class="answer" 
-                                name="${question}" 
+                                name="${removeDoubleQuotes(question)}" 
                                 id="${slugify(question)}-${slugify(answer)}" 
-                                value="${answer}">
+                                value="${removeDoubleQuotes(answer)}">
                                 <label for="${slugify(question)}-${slugify(answer)}">${answer}</label>
                                 </div>
                                 `;
@@ -122,8 +126,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (that.is (':checked')) {
                     data[that.attr('name')] = that.attr('value');
                 } else {
-                    if (!data[that.attr(name)]) {
-                        data[that.attr(name)] = null;
+                    if (!data[that.attr('name')]) {
+                        data[that.attr('name')] = null;
                     }
                 }
             })
@@ -168,7 +172,6 @@ document.addEventListener("DOMContentLoaded", function () {
             evt.preventDefault()
 
             const data = prepareData();
-
             timerDisplay.parent().hide();
             timeLeft = 0;
 
