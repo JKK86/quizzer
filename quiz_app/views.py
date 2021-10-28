@@ -1,6 +1,8 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import View
 
@@ -82,3 +84,25 @@ class QuizDataSaveView(View):
                                                 'score': (score / quiz.number_of_questions),
                                                 'date': timezone.now()})
             return JsonResponse({'results': results, 'score': score})
+
+
+class OwnerMixin(object):
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.filter(author=self.request.user)
+
+
+class OwnerEditMixin(object):
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+
+class OwnerQuizMixin(OwnerMixin, LoginRequiredMixin, PermissionRequiredMixin):
+    model = Quiz
+    fields = ['category', 'title', 'slug', 'description', 'time']
+    success_url = reverse_lazy('manage_quiz_list')
+
+
+class OwnerQuizEditMixin(OwnerQuizMixin, OwnerEditMixin):
+    template_name = 'quizzes/manage/form.html'
