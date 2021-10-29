@@ -5,6 +5,7 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import View
+from django.views.generic import CreateView, UpdateView, DeleteView, ListView
 
 from quiz_app.models import Quiz, Category, Result
 
@@ -26,7 +27,7 @@ class QuizListView(View):
         except EmptyPage:
             quizzes = paginator.page(paginator.num_pages)
 
-        return render(request, 'quizzes/quiz_list.html', {
+        return render(request, 'quizzes/quiz/quiz_list.html', {
             'quizzes': quizzes,
             'category': category,
             'categories': categories,
@@ -37,7 +38,7 @@ class QuizListView(View):
 class QuizDetailView(View):
     def get(self, request, quiz_id, quiz_slug):
         quiz = get_object_or_404(Quiz, pk=quiz_id, slug=quiz_slug)
-        return render(request, 'quizzes/quiz_detail.html', {'quiz': quiz})
+        return render(request, 'quizzes/quiz/quiz_detail.html', {'quiz': quiz})
 
 
 class QuizDataView(View):
@@ -100,9 +101,28 @@ class OwnerEditMixin(object):
 
 class OwnerQuizMixin(OwnerMixin, LoginRequiredMixin, PermissionRequiredMixin):
     model = Quiz
-    fields = ['category', 'title', 'slug', 'description', 'time']
+    fields = ['category', 'title', 'description', 'time']
     success_url = reverse_lazy('manage_quiz_list')
 
 
 class OwnerQuizEditMixin(OwnerQuizMixin, OwnerEditMixin):
     template_name = 'quizzes/manage/form.html'
+
+
+class ManageQuizListView(OwnerQuizMixin, ListView):
+    template_name = 'quizzes/manage/list.html'
+    permission_required = 'quiz_app.view_quiz'
+    context_object_name = 'quizzes'
+
+
+class CreateQuizView(OwnerQuizEditMixin, CreateView):
+    permission_required = 'quiz_app.add_quiz'
+
+
+class UpdateQuizView(OwnerQuizEditMixin, UpdateView):
+    permission_required = 'quiz_app.change_quiz'
+
+
+class DeleteQuizView(OwnerQuizEditMixin, DeleteView):
+    template_name = 'quizzes/manage/delete.html'
+    permission_required = 'quiz_app.delete_quiz'

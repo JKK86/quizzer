@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}
+    Moje quizy
+{% endblock %}
+{% block content %}
+    <h1>Moje quizy</h1>
+    <div class="module">
+        {% for quiz in quizzes %}
+            <div class="quiz-info">
+                <h3>{{ quiz.title }}</h3>
+                <p>
+                    <a href="{% url 'edit_quiz' quiz.id quiz.slug %}">Edytuj</a>
+                    <a href="{% url 'delete_quiz' quiz.id quiz.slug %}">Usuń</a>
+                    <a href="">Edytuj pytania</a>
+                </p>
+            </div>
+        {% empty %}
+            <p>Nie stworzyłeś jeszcze żadnych quizzów</p>
+        {% endfor %}
+        <p>
+            <a href="{% url 'create_quiz' %}">Utwórz nowy quiz</a>
+        </p>
+    </div>
+{% endblock %}

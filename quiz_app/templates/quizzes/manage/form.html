@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}
+    {% if object %}
+        Edytuj quiz
+    {% else %}
+        Utwórz nowy quiz
+    {% endif %}
+{% endblock %}
+{% block content %}
+    <h1>
+        {% if object %}
+            Edytuj quiz
+        {% else %}
+            Utwórz nowy quiz
+        {% endif %}
+    </h1>
+    <div class="module">
+        <h2>Informacja o kursie</h2>
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <p><input type="submit" value="Zapisz quiz"></p>
+        </form>
+    </div>
+{% endblock %}
