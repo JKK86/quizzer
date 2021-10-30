@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}
+    Edycja {{ quiz.title }}
+{% endblock %}
+{% block content %}
+    <h1>Edycja {{ quiz.title }}</h1>
+    <div class="module">
+        <h2>Pytania do quizu</h2>
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ formset.as_p }}
+            {{ formset.managment_form }}
+            <input type="submit" value="Zapisz pytania" class="button">
+        </form>
+    </div>
+{% endblock %}

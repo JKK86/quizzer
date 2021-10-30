@@ -64,13 +64,17 @@ def create_slug(sender, instance, *args, **kwargs):
 
 
 class Question(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="questions", blank=True, null=True)
+    # category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="questions", blank=True, null=True)
     content = models.CharField(max_length=255)
     image = models.ImageField(blank=True, upload_to='images/%Y/%m/%d')
-    quizzes = models.ManyToManyField(Quiz, related_name="questions", through="QuestionOrder")
+    quiz = models.ForeignKey(Quiz, related_name="questions", on_delete=models.CASCADE)
+    order = OrderField(blank=True, for_fields=['quiz'])
 
     def __str__(self):
         return self.content
+
+    class Meta:
+        ordering = ['order', ]
 
 
 class Answer(models.Model):
@@ -113,13 +117,13 @@ class Comment(models.Model):
         ordering = ['-created', ]
 
 
-class QuestionOrder(models.Model):
-    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    order = OrderField(blank=True, for_fields=['quiz'])
-
-    class Meta:
-        ordering = ['quiz', 'order', ]
-
-    def __str__(self):
-        return f"{self.order}.{self.question}"
+# class QuestionOrder(models.Model):
+#     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+#     question = models.ForeignKey(Question, on_delete=models.CASCADE)
+#     order = OrderField(blank=True, for_fields=['quiz'])
+#
+#     class Meta:
+#         ordering = ['quiz', 'order', ]
+#
+#     def __str__(self):
+#         return f"{self.order}.{self.question}"

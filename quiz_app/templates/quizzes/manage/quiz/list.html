@@ -9,16 +9,16 @@
             <div class="quiz-info">
                 <h3>{{ quiz.title }}</h3>
                 <p>
-                    <a href="{% url 'edit_quiz' quiz.id quiz.slug %}">Edytuj</a>
-                    <a href="{% url 'delete_quiz' quiz.id quiz.slug %}">Usuń</a>
-                    <a href="">Edytuj pytania</a>
+                    <a href="{% url 'quiz_edit' quiz.id quiz.slug %}">Edytuj</a>
+                    <a href="{% url 'quiz_delete' quiz.id quiz.slug %}">Usuń</a>
+                    <a href="{% url 'quiz_questions_update' quiz.id quiz.slug %}">Edytuj pytania</a>
                 </p>
             </div>
         {% empty %}
             <p>Nie stworzyłeś jeszcze żadnych quizzów</p>
         {% endfor %}
         <p>
-            <a href="{% url 'create_quiz' %}">Utwórz nowy quiz</a>
+            <a href="{% url 'quiz_create' %}">Utwórz nowy quiz</a>
         </p>
     </div>
 {% endblock %}

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from quiz_app.models import Category, Quiz, Question, QuestionOrder, Answer
+from quiz_app.models import Category, Quiz, Question, Answer
 
 
 @admin.register(Category)
@@ -9,8 +9,8 @@ class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name', )}
 
 
-class QuestionOrderAdminInline(admin.TabularInline):
-    model = QuestionOrder
+class QuestionAdminInline(admin.TabularInline):
+    model = Question
     extra = 4
 
 
@@ -19,7 +19,7 @@ class QuizAdmin(admin.ModelAdmin):
     list_display = ['title', 'category', 'time', 'author', 'created', 'updated']
     exclude = ['created', 'updated', ]
     prepopulated_fields = {'slug': ('title', )}
-    inlines = [QuestionOrderAdminInline, ]
+    inlines = [QuestionAdminInline, ]
     list_filter = ['category', 'author']
     search_fields = ['title', 'description', ]
     list_editable = ['time', ]
@@ -33,8 +33,8 @@ class AnswerInline(admin.TabularInline):
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ['content', 'category' ]
-    fields = ['content', 'image', 'category', ]
+    list_display = ['content', ]
+    fields = ['content', 'image', ]
     inlines = [AnswerInline, ]
     search_fields = ['content', ]
-    list_filter = ['category', ]
+    list_filter = ['quiz', ]
