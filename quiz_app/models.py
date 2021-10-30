@@ -51,11 +51,6 @@ class Quiz(models.Model):
     def number_of_questions(self):
         return self.questions.count()
 
-    # def save(self, *args, **kwargs):
-    #     if not self.slug:
-    #         self.slug = slugify(self.title)
-    #         super().save(*args, **kwargs)
-
 
 @receiver(pre_save, sender=Quiz)
 def create_slug(sender, instance, *args, **kwargs):
@@ -64,7 +59,6 @@ def create_slug(sender, instance, *args, **kwargs):
 
 
 class Question(models.Model):
-    # category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="questions", blank=True, null=True)
     content = models.CharField(max_length=255)
     image = models.ImageField(blank=True, upload_to='images/%Y/%m/%d')
     quiz = models.ForeignKey(Quiz, related_name="questions", on_delete=models.CASCADE)
@@ -115,15 +109,3 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ['-created', ]
-
-
-# class QuestionOrder(models.Model):
-#     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-#     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-#     order = OrderField(blank=True, for_fields=['quiz'])
-#
-#     class Meta:
-#         ordering = ['quiz', 'order', ]
-#
-#     def __str__(self):
-#         return f"{self.order}.{self.question}"
