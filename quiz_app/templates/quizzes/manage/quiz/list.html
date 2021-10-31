@@ -12,6 +12,9 @@
                     <a href="{% url 'quiz_edit' quiz.id quiz.slug %}">Edytuj</a>
                     <a href="{% url 'quiz_delete' quiz.id quiz.slug %}">Usuń</a>
                     <a href="{% url 'quiz_questions_update' quiz.id quiz.slug %}">Edytuj pytania</a>
+                    {% if quiz.questions.count > 0 %}
+                    <a href="{% url 'question_answers_list' quiz.questions.first.id %}">Zarządzaj pytaniami</a>
+                    {% endif %}
                 </p>
             </div>
         {% empty %}

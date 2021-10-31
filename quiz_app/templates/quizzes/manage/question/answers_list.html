@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}
+    Pytanie {{ question.order }}
+{% endblock %}
+
+{% block content %}
+    {% with question.quiz as quiz %}
+        <h1>Quiz "{{ quiz.title }}"</h1>
+        <div class="contents">
+            <h3>Pytania</h3>
+            <ul id="questions">
+                {% for q in quiz.questions.all %}
+                    <li data-id="{{ q.id }}" {% if q == question %} class="selected" {% endif %}>
+                        <a href="{% url 'question_answers_list' q.id %}">
+                        <span>
+                            Pytanie <span class="order">{{ q.order }}</span>
+                        </span>
+                            <br>
+                            {{ q.title }}
+                        </a>
+                    </li>
+                {% empty %}
+                    <li>Brak pytań</li>
+                {% endfor %}
+            </ul>
+            <p><a href="{% url 'quiz_questions_update' quiz.id quiz.slug %}">Edytuj pytania</a></p>
+        </div>
+        <div class="question">
+            <h2>Pytanie {{ question.order }}: {{ question.content }}</h2>
+            <h3>Odpowiedzi:</h3>
+            <div id="question-answers">
+                {% for answer in question.answers.all %}
+                    <div data-id="answer-id">
+{#                        {% with answer.content as cont %}#}
+                            <p> {{ answer.content }} </p>
+{#                            <a href="{% url 'module_content_update' module.id item|model_name item.id %}">Edytuj</a>#}
+{#                            <form action="{% url 'module_content_delete' content.id %}" method="post">#}
+{#                                {% csrf_token %}#}
+{#                                <input type="submit" value="Usuń">#}
+{#                            </form>#}
+{#                        {% endwith %}#}
+                    </div>
+                {% empty %}
+                    <p>Do tego pytania nie utworzono jeszcze odpowiedzi</p>
+                {% endfor %}
+            </div>
+            <hr/>
+            <h3>
+                <a href="{% url 'question_answers_update' quiz.id quiz.slug question.id %}">
+                    Zarządzaj odpowiedziami</a>
+            </h3>
+        </div>
+
+    {% endwith %}
+{% endblock %}

@@ -8,8 +8,8 @@ from django.views import View
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView
 from django.views.generic.base import TemplateResponseMixin
 
-from quiz_app.forms import QuestionFormSet
-from quiz_app.models import Quiz, Category, Result
+from quiz_app.forms import QuestionFormSet, AnswerFormSet
+from quiz_app.models import Quiz, Category, Result, Question
 
 
 class QuizListView(View):
@@ -131,7 +131,7 @@ class DeleteQuizView(OwnerQuizEditMixin, DeleteView):
 
 
 class QuizQuestionsUpdateView(TemplateResponseMixin, View):
-    template_name = 'quizzes/manage/questions/formset.html'
+    template_name = 'quizzes/manage/question/formset.html'
     quiz = None
 
     def get_formset(self, data=None):
@@ -154,5 +154,39 @@ class QuizQuestionsUpdateView(TemplateResponseMixin, View):
             return redirect('quiz_manage_list')
         return self.render_to_response({'quiz': self.quiz,
                                         'formset': formset})
+
+
+class QuestionAnswersUpdateView(TemplateResponseMixin, View):
+    template_name = 'quizzes/manage/answer/formset.html'
+    question = None
+
+    def get_formset(self, data=None):
+        return AnswerFormSet(instance=self.question,
+                             data=data)
+
+    def dispatch(self, request, quiz_id, quiz_slug, pk):
+        self.question = get_object_or_404(Question, id=pk)
+        return super().dispatch(request, pk)
+
+    def get(self, request, *args, **kwargs):
+        formset = self.get_formset()
+        return self.render_to_response({'question': self.question,
+                                        'formset': formset})
+
+    def post(self, request, *args, **kwargs):
+        formset = self.get_formset(data=request.POST)
+        if formset.is_valid():
+            formset.save()
+            return redirect('quiz_manage_list')
+        return self.render_to_response({'question': self.question,
+                                        'formset': formset})
+
+
+class QuestionAnswersListView(TemplateResponseMixin, View):
+    template_name = "quizzes/manage/question/answers_list.html"
+
+    def get(self, request, question_id):
+        question = get_object_or_404(Question, id=question_id, quiz__author=request.user)
+        return self.render_to_response({'question': question})
 
 
