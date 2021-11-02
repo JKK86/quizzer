@@ -1,5 +1,6 @@
 from django.contrib import admin
 
+from quiz_app.forms import BaseAnswerInlineFormset
 from quiz_app.models import Category, Quiz, Question, Answer
 
 
@@ -28,13 +29,14 @@ class QuizAdmin(admin.ModelAdmin):
 
 class AnswerInline(admin.TabularInline):
     model = Answer
+    formset = BaseAnswerInlineFormset
     extra = 4
 
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
     list_display = ['content', ]
-    fields = ['content', 'image', ]
+    fields = ['content', 'image', 'quiz', ]
     inlines = [AnswerInline, ]
     search_fields = ['content', ]
     list_filter = ['quiz', ]
